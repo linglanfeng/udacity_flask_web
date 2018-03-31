@@ -14,13 +14,18 @@
 >        nohup python ensembling_kears_web.py runserver –threaded &
 
 
-** 初期页面：**
+##### 初期页面：
+
 ![][screen_shot_1]
 
-** 预测结果：**
+
+##### 预测结果：
+
 ![][screen_shot_2]
 
-** 异常处理：**
+
+##### 异常处理：  
+
 ![][screen_shot_3]
 
 
