@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+    <link href="https://cdn.bootcss.com/bootstrap-fileinput/4.4.7/css/fileinput.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.7/js/fileinput.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.7/js/locales/zh.min.js"></script>
+
+  <script language="JavaScript">
+        //初始化fileinput控件
+        $(document).ready(function(){
+            var control = $('#' + "upload_image");
+            control.fileinput({
+                language:"zh",
+                browseLable:"选择上传...",
+            　　 uploadUrl: '/ajax_process',
+            　　 allowedFileExtensions : ['jpg','png','jpeg'],//允许的文件类型
+            　　 overwriteInitial: false,
+            　　 maxFileSize: 7000,//文件的最大大小 单位是k
+            　　 maxFileCount: 1,//最多文件数量
+                showCaption:true,
+                showRemove:true,
+                showClose:false,
+                showUpload:false,
+                dropZoneEnabled: false,
+                dropZoneTitle:"选择猫狗图像...",
+                layoutTemplates:{
+                    actionDelete:'',
+                    actionUpload:'',
+                }
+            });
+
+            control.on("filebatchselected", function(event, files) {
+                goto_ajax();
+            });
+            control.on('fileclear', function(event) {
+                $('#msg').removeClass("alert-danger").removeClass("alert-success").addClass("alert-primary");
+                $('#msg').text("请选择你要识别的图片！")
+            });
+        });
+
+        function goto_ajax(){
+            $('#msg').text("图片识别中...")
+            var options = {
+                url: '/ajax_process',
+                type: 'post',
+                cache: false,
+                data: new FormData($("#form1")[0]),
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $('#msg').removeClass("alert-primary").removeClass("alert-danger").addClass("alert-success");
+                    $('#msg').text(data)
+                   },
+                error: function (err) {
+                    $('#msg').removeClass("alert-primary").removeClass("alert-success").addClass("alert-danger");
+                    $('#msg').text("图片识别失败！")
+                }
+            };
+            $.ajax(options);
+        }
+
+  </script>
+  <title>毕业设计 Dogs vs Cats For Udacity P7 (Web 应用)</title>
+</head>
+
+  <body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>毕业设计 Dogs vs Cats For Udacity P7 (Web 应用)</h1>
+            <p>集合P7训练成果，利用Flask构建一个Web 识别猫狗的应用。暂时只能识别猫狗，对于部分异常图片可以识别。</p>
+        </div>
+        <form action="/" method=post enctype="multipart/form-data" id="form1">
+          <div class="alert alert-primary" role="alert" id="msg">
+              请选择你要识别的图片！
+          </div>
+          <div class="file-loading">
+                <input id="upload_image" name="upload_image" type="file" data-overwrite-initial="false" data-min-file-count="1" />
+          </div>
+           <br/>
+          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="goto_ajax()">手动再次识别</button>
+        </form>
+
+        <footer class="footer navbar-fixed-bottom ">
+            <div class="container">
+                Ver 0.1 2018/03/11 By 凌蓝风
+            </div>
+        </footer>
+    </div>
+
+
+
+  </body>
+
+</html>
